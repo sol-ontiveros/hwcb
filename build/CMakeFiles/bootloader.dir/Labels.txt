@@ -1,0 +1,13 @@
+# Target labels
+ bootloader
+# Source files and their labels
+/home/sol/esp/SU_HWCB/build/CMakeFiles/bootloader
+/home/sol/esp/SU_HWCB/build/CMakeFiles/bootloader.rule
+/home/sol/esp/SU_HWCB/build/CMakeFiles/bootloader-complete.rule
+/home/sol/esp/SU_HWCB/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+/home/sol/esp/SU_HWCB/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+/home/sol/esp/SU_HWCB/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+/home/sol/esp/SU_HWCB/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule
+/home/sol/esp/SU_HWCB/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+/home/sol/esp/SU_HWCB/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+/home/sol/esp/SU_HWCB/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule

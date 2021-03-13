@@ -1,0 +1,113 @@
+
+menu "HWCB Configuration"
+
+#************************************************************************
+  menu "UART"
+      config SW_CTRL_UART_PORT
+          int "UART port number"
+          range 0 2 if IDF_TARGET_ESP32
+          range 0 1 if IDF_TARGET_ESP32S2
+          default 2 if IDF_TARGET_ESP32
+          default 1 if IDF_TARGET_ESP32S2
+          help
+              UART communication port for SW/HW comms and control.
+              See UART documentation for available port numbers.
+
+      config UART_BAUD_RATE
+          int "UART communication speed"
+          range 1200 115200
+          default 115200
+          help
+              UART baud rate
+
+      config UART_BUFFER_SIZE
+        int "UART TX/RX buffer size"
+        range 256 115200
+        default 1024
+        help
+          SW/HW comms and control UART buffer.
+
+      config USE_HW_FLOWCTRL
+        bool "Enable HW flow control pins"
+        default 0
+        help
+           If enabled, define pin numbers below.
+
+      config UART_RXD
+          int "UART RXD pin number"
+          range 0 34 if IDF_TARGET_ESP32
+          range 0 46 if IDF_TARGET_ESP32S2
+          default 5
+          help
+              GPIO number for UART RX pin. See UART documentation for more information
+              about available pin numbers for UART.
+
+      config UART_TXD
+          int "UART TXD pin number"
+          range 0 34 if IDF_TARGET_ESP32
+          range 0 46 if IDF_TARGET_ESP32S2
+          default 4
+          help
+              GPIO number for UART TX pin. See UART documentation for more information
+              about available pin numbers for UART.
+
+      config UART_CTS
+          int "UART DTR pin number"
+          range 0 34 if IDF_TARGET_ESP32
+          range 0 46 if IDF_TARGET_ESP32S2
+          default 6
+          help
+              GPIO number for UART CTS pin. See UART documentation for more information
+              about available pin numbers for UART.
+
+      config UART_RTS
+          int "UART RTS pin number"
+          range 0 34 if IDF_TARGET_ESP32
+          range 0 46 if IDF_TARGET_ESP32S2
+          default 7
+          help
+              GPIO number for UART RTS pin. See UART documentation for more information
+              about available pin numbers for UART.
+  endmenu
+#***************************************************************************************
+
+#***************************************************************************************
+  menu "WASP"
+    config WASP_UART_PORT
+      int "UART port for wasp protocol"
+      range 0 2 if IDF_TARGET_ESP32
+      range 0 1 if IDF_TARGET_ESP32S2
+      default SW_CTRL_UART_PORT
+      help
+        The UART port that will be used by the wasp protocol
+
+    config WASP_MAX_TX_BUF
+      int "Max TX Buffer Size"
+      default 2048
+
+    config WASP_MAX_RX_BUF
+      int "Max RX Buffer Size"
+      default 2048
+
+    config WASP_MAX_CMDS
+      int "Max WASP endpoint handlers"
+      default 16
+      help
+        The maximum number of command functions that can be registered.
+
+    config WASP_RX_TIMEOUT
+      int "UART RX timeout (ticks)."
+      default 255
+      help
+        The number of RTOS ticks to wait before UART timeout.
+
+    config WASP_DEBUG
+      bool "Enable WASP testing/debug messages."
+      default "n"
+      help
+        Print extra debug messages. Use "if(WASP_SIM) {debug}" or "if(wasp_handle->config.debug){debug}" to
+        add more debug messages.
+  endmenu
+#**************************************************************************************
+
+endmenu
