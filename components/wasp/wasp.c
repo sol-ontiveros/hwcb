@@ -327,7 +327,6 @@ esp_err_t wasp_send(wasp_handle_t* handle, uint32_t command, uint32_t data_membe
   //tx_frame.data = calloc(data_total_size, sizeof(uint8_t));
   //memcpy(tx_frame.data, data, data_total_size);
 
-
   tx_frame->frame_valid = 1;
 
   //uint8_t crc_val = wasp_crc_create(&tx_frame);
@@ -356,6 +355,23 @@ esp_err_t wasp_send(wasp_handle_t* handle, uint32_t command, uint32_t data_membe
   return ret_val;
 }
 
+
+//Used to indicate data was received, but that it was rejected or invalid.
+esp_err_t wasp_nack(wasp_handle_t* handle) {
+  char nack_msg = WASP_NACK;
+  int data_sent = uart_write_bytes(handle->config.uart_port, &nack_msg, 1);
+  ESP_LOGW(TAG, "[NACK]");
+  uart_flush(handle->config.uart_port);
+  return ESP_OK;
+}
+
+//Used to indicate data was received, but that it was rejected or invalid.
+esp_err_t wasp_ack(wasp_handle_t* handle) {
+  char nack_msg = WASP_ACK;
+  int data_sent = uart_write_bytes(handle->config.uart_port, &nack_msg, 1);
+  ESP_LOGI(TAG, "[ACK]");
+  return ESP_OK;
+}
 
 
 esp_err_t wasp_init(wasp_handle_t* handle, wasp_config_t config) {
@@ -394,7 +410,17 @@ wasp_config_t wasp_get_config()  {
   return ret_config;
 }
 
-//TODO: need a find command function to verify the given handler hasn't already been registered.
+
+//Check for the specified command function in the current handle.
+int wasp_find_command(wasp_handle_t* handle, const char* command) {
+  for (int i=0; i<handle->config.max_cmds; i++) {
+    if (handle->commands[i]->cmd_hex_code == command) {
+      return i;
+    }
+  }
+  return 0;
+}
+
 
 esp_err_t wasp_register_command_function(wasp_handle_t* handle, const wasp_command_function_t* cmd_function) {
   if (cmd_function==NULL) {
@@ -402,7 +428,9 @@ esp_err_t wasp_register_command_function(wasp_handle_t* handle, const wasp_comma
     return ESP_ERR_INVALID_ARG;
   }
 
+
   for (int i=0; i < handle->config.max_cmds; i++) {
+
     //register next available command function
     if (handle->commands[i] == NULL) {
       handle->commands[i] = malloc(sizeof(wasp_command_function_t));
@@ -419,8 +447,16 @@ esp_err_t wasp_register_command_function(wasp_handle_t* handle, const wasp_comma
       ESP_LOGI(TAG, "Registered command handler %i - Name: %s, Command: %x", i, cmd_function->command, cmd_function->cmd_hex_code);
       return ESP_OK;
     }
+
+    //Check if command function is already registered.
+    //since command functions are entered at the next available position, this should run on all registered commands.
+    if(handle->commands[i]->cmd_hex_code == cmd_function->cmd_hex_code) {
+      ESP_LOGW(TAG, "Selected command %x is already registered at position %i under name %s", handle->commands[i]->cmd_hex_code, i, handle->commands[i]->command);
+      return ESP_FAIL;
+    }
   }
 
+  //Should only get here if all available command function slots are full.
   ESP_LOGE(TAG, "Unable to register command function %s", cmd_function->command);
   return ESP_FAIL;
 }
@@ -429,6 +465,12 @@ esp_err_t wasp_register_command_function(wasp_handle_t* handle, const wasp_comma
 //This function finds the command from the received frame and calls the appropriate handler function.
 //It should be called by the receive ISR.
 esp_err_t wasp_call_command_handler(wasp_handle_t* handle, wasp_frame_t* frame) {
+  int idx = wasp_find_command(handle, frame->cmd);
+  if (idx) {
+    ESP_LOGI(TAG, "Calling command function %s, (hex cmd: %x)", handle->commands[idx]->command, handle->commands[idx]->cmd_hex_code);
+    return handle->commands[idx]->handler(handle, frame);
+  }
+  ESP_LOGW(TAG, "No valid command function registered for command %x.", frame->cmd);
   return ESP_FAIL;
 }
 
@@ -438,15 +480,16 @@ esp_err_t wasp_debug_isr(wasp_handle_t* handle, wasp_frame_t* frame) {
   //wasp_transmit_frame(rx_frame);
   //uint32_t debug_data[4] = {1024, 1025, 1026, 1027};
   //uint32_t debug_data[4] = {1,2,3,4};
-  uint32_t debug_data[4] = {0x7FFFFFFF, 0x7FFFFFFF, 0x7FFFFFFF, 0x7FFFFFFF};
+  //uint32_t debug_data[4] = {0x7FFFFFFF, 0x7FFFFFFF, 0x7FFFFFFF, 0x7FFFFFFF};
   //uint8_t debug_data[5] = {1, 2, 3, 4, 5};
 
 
-//  printf("calculate another crc: ");
+  //printf("calculate another crc: ");
   //uint8_t buffer[28] = {0x1d,0x00,0x00,0x00,0xff,0x00,0x00,0x00,0x03,0x00,0x00,0x00,0x04,0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x02,0x00,0x00,0x00,0x03,0x00,0x00,0x00};
   //printf("%x\n", ((uint8_t) ~crc8_le(0, &buffer, 28)));
 
-  return wasp_send(handle, 0xAA, 4, 4, &debug_data);
+  return wasp_call_command_handler(handle, frame);
+  //return wasp_send(handle, 0xAA, 4, 4, &debug_data);
   //return wasp_send(handle, 0xFF, 1, 5, (uint8_t*) &debug_data);
   //return ESP_OK
 }
@@ -457,19 +500,36 @@ a wasp_handle_t, perform the necessary checks, and call the appropriate command
 function/handler based on the received command and data. */
 esp_err_t wasp_rx_routine(wasp_handle_t* handle) {
   wasp_frame_t* rx_frame = wasp_receive(handle);
-
-  //allocate a little space for testing stuff.
-  if(handle->config.debug) {
-    ESP_LOGW(TAG, "Debug set to TRUE... running test rx routine.");
-    printf("Test routine begun.\n");
-    esp_err_t ret_val = wasp_debug_isr(handle, rx_frame);
-    printf("End of test routine.\n");
+  //wasp_receive returns null if there were problems. free frame and respond with NACK so we can retry data receive.
+  if(rx_frame==NULL) {
     free(rx_frame);
-    return ret_val;
+    ESP_LOGW(TAG, "Problem receiving frame. Command will not be run.");
+    if(handle->config.debug) {
+      return ESP_OK;
+    }
+    return wasp_nack(handle);
   }
 
-  //place the real code here.
+  //continue with handling if frame is valid and passed checksum test.
+  if(rx_frame->frame_valid && rx_frame->checksum_pass) {
+    //a little space for testing stuff-write it in function wasp_debug_isr.
+    if(handle->config.debug) {
+      ESP_LOGW(TAG, "Debug set to TRUE... running test rx routine.");
+      printf("Test routine begun.\n");
+      esp_err_t ret_val = wasp_debug_isr(handle, rx_frame);
+      printf("End of test routine.\n");
+      free(rx_frame);
+      return ret_val;
+    }
 
-  free(rx_frame);
-  return ESP_OK;
+    //place the real code here.
+
+    free(rx_frame);
+    //return wasp_ack(handle);
+    return ESP_OK;
+  }
+
+  ESP_LOGE(TAG, "Frame was not valid.");
+  //return wasp_nack(handle);
+  return ESP_FAIL;
 }

@@ -184,6 +184,17 @@ const wasp_command_function_t simple = {
   .handler = simple_handler
 };
 
+esp_err_t simple_handler_two(wasp_handle_t* handle, wasp_frame_t* frame) {
+  printf("This is the command handler function for code: %x\n", frame->cmd);
+  return ESP_OK;
+}
+
+const wasp_command_function_t simple_two = {
+  .command = "Simple Two",
+  .cmd_hex_code = 0xFF,
+  .handler = simple_handler_two
+};
+
 /*************************************************************************************************************
 **************************************************************************************************************/
 
@@ -202,7 +213,8 @@ void app_main(void)
   wasp_handle_t* wasp_hd = malloc(sizeof(wasp_handle_t));
   ESP_ERROR_CHECK(wasp_init(wasp_hd, wasp_config));
 
-  wasp_register_command_function(wasp_hd, &simple);
+  ESP_ERROR_CHECK(wasp_register_command_function(wasp_hd, &simple));
+  ESP_ERROR_CHECK(wasp_register_command_function(wasp_hd, &simple_two));
   //printf("Where's the problem here?\n");
   //simple_handler(&simple_frame);
 

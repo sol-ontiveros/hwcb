@@ -11,6 +11,15 @@
 #define WASP_RESP_ERR 0xFE000000
 
 
+typedef struct wasp_config {
+  uart_port_t uart_port;
+  int max_rx_buf;
+  int max_tx_buf;
+  int max_cmds;
+  int rx_timeout;
+  int debug;
+} wasp_config_t;
+
 typedef struct wasp_frame {
   int32_t msg_len; //the total message length
   int32_t cmd; //the command byte of the frame
@@ -22,25 +31,20 @@ typedef struct wasp_frame {
   uint8_t data[]; //the frame data
 } wasp_frame_t;
 
+
+//TODO: The handle needs to be of type wasp_handle_t, but I can't think of how to do that right now.
 typedef struct wasp_command_function {
   const char* command;
   int cmd_hex_code; //hex code that will be received over UART
-  esp_err_t (*handler)(wasp_handle_t* handle, wasp_frame_t *frame);
+  //parame handle MUST be of type wasp_handle_t
+  esp_err_t (*handler)(void* handle, wasp_frame_t *frame);
 } wasp_command_function_t;
-
-typedef struct wasp_config {
-  uart_port_t uart_port;
-  int max_rx_buf;
-  int max_tx_buf;
-  int max_cmds;
-  int rx_timeout;
-  int debug;
-} wasp_config_t;
 
 typedef struct wasp_handle {
   wasp_config_t config;
   wasp_command_function_t** commands;
 } wasp_handle_t;
+
 
 int wasp_crc_check(wasp_frame_t* frame_ptr);
 
@@ -53,6 +57,8 @@ esp_err_t wasp_send(wasp_handle_t* handle, uint32_t command, uint32_t data_membe
 esp_err_t wasp_init(wasp_handle_t* handle, wasp_config_t config);
 
 wasp_config_t wasp_get_config();
+
+int wasp_find_command(wasp_handle_t* handle, const char* command);
 
 esp_err_t wasp_register_command_function(wasp_handle_t* handle, const wasp_command_function_t* cmd_function);
 
