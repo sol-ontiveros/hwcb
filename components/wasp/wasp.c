@@ -118,9 +118,9 @@ int wasp_crc_check(wasp_frame_t* frame) {
 
 wasp_frame_t* wasp_receive(wasp_handle_t* handle) {
   ESP_LOGI(TAG, "Beginning data RX.");
-  if(handle->config.debug) {
+  /*if(handle->config.debug) {
     printf("handle in receive: %i \n%i \n%i \n", handle->config.max_rx_buf, handle->config.max_tx_buf, handle->config.uart_port);
-  }
+  }*/
   if(uart_is_driver_installed(handle->config.uart_port)) {
     //TODO: check for ACK, NACK, and ERR? Should be handled by wasp_write.
 
@@ -156,16 +156,18 @@ wasp_frame_t* wasp_receive(wasp_handle_t* handle) {
 
     //get data based on received data lengths
     uint8_t* data_buf;
+    uint8_t rx_chksum = 0;
     if((frame_header[2]*frame_header[3]) < (uint32_t) handle->config.max_rx_buf) {
       //create space for data received, plus checksum byte.
-      data_buf = calloc((frame_header[2]+1), frame_header[3]);
+      data_buf = calloc(frame_header[2]*frame_header[3], sizeof(uint8_t));
       if (data_buf==NULL) {
         free(frame_header);
         free(data_buf);
         ESP_LOGE(TAG, "Unable to allocate data buffer memory.");
         return NULL;
       }
-      uart_read_bytes(handle->config.uart_port,  data_buf, (frame_header[2]+1), handle->config.rx_timeout);
+      uart_read_bytes(handle->config.uart_port,  data_buf, frame_header[2]*frame_header[3], handle->config.rx_timeout);
+      uart_read_bytes(handle->config.uart_port,  &rx_chksum, 1, handle->config.rx_timeout);
     }
     else {
       ESP_LOGW(TAG, "Received data size is larger than max allowed buffer size.");
@@ -174,7 +176,7 @@ wasp_frame_t* wasp_receive(wasp_handle_t* handle) {
     }
 
     //pack data into wasp frame struct.
-    wasp_frame_t* ret_frame = malloc(sizeof(*ret_frame) + sizeof(frame_header[2]*frame_header[3]));
+    wasp_frame_t* ret_frame = malloc(sizeof(*ret_frame) + (frame_header[2]*frame_header[3]) + 1);
     if (ret_frame==NULL) {
       ESP_LOGW(TAG, "Couldn't allocate memory for frame data");
       free(ret_frame);
@@ -186,11 +188,11 @@ wasp_frame_t* wasp_receive(wasp_handle_t* handle) {
     ret_frame->cmd =          frame_header[1];
     ret_frame->data_num =     frame_header[2];
     ret_frame->data_size =    frame_header[3];
-    ret_frame->checksum =     data_buf[frame_header[2]];
+    ret_frame->checksum =     rx_chksum;
     ret_frame->frame_valid =  frame_valid_flag;
 
     //Copy all data from rx buf to the frame.
-    for (int i=0; i<frame_header[2]; i++) {
+    for (int i=0; i<frame_header[2]*frame_header[3]; i++) {
       ret_frame -> data[i] = data_buf[i];
     }
 
@@ -206,7 +208,7 @@ wasp_frame_t* wasp_receive(wasp_handle_t* handle) {
       ret_frame->checksum_pass = 1;
     }
     else {
-      ESP_LOGW(TAG, "Checksum failed.");
+      ESP_LOGW(TAG, "Checksum failed. RX'd: %i, Calc'd: %i", ret_frame->checksum, wasp_crc_create(ret_frame));
     }
 
     //flush input after rx. This could discard other sent data, so will need to handle
@@ -418,7 +420,7 @@ int wasp_find_command(wasp_handle_t* handle, const char* command) {
       return i;
     }
   }
-  return 0;
+  return -1;
 }
 
 
@@ -444,7 +446,7 @@ esp_err_t wasp_register_command_function(wasp_handle_t* handle, const wasp_comma
       handle->commands[i]->cmd_hex_code = cmd_function->cmd_hex_code;
       handle->commands[i]->handler =      cmd_function->handler;
 
-      ESP_LOGI(TAG, "Registered command handler %i - Name: %s, Command: %x", i, cmd_function->command, cmd_function->cmd_hex_code);
+      ESP_LOGI(TAG, "Registered command handler %i - Name: %s, Command: 0x%x", i, cmd_function->command, cmd_function->cmd_hex_code);
       return ESP_OK;
     }
 
@@ -466,7 +468,7 @@ esp_err_t wasp_register_command_function(wasp_handle_t* handle, const wasp_comma
 //It should be called by the receive ISR.
 esp_err_t wasp_call_command_handler(wasp_handle_t* handle, wasp_frame_t* frame) {
   int idx = wasp_find_command(handle, frame->cmd);
-  if (idx) {
+  if (idx>=0) {
     ESP_LOGI(TAG, "Calling command function %s, (hex cmd: %x)", handle->commands[idx]->command, handle->commands[idx]->cmd_hex_code);
     return handle->commands[idx]->handler(handle, frame);
   }
@@ -523,7 +525,7 @@ esp_err_t wasp_rx_routine(wasp_handle_t* handle) {
     }
 
     //place the real code here.
-
+    return wasp_call_command_handler(handle, rx_frame);
     free(rx_frame);
     //return wasp_ack(handle);
     return ESP_OK;

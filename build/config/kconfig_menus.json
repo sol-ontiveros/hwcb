@@ -1755,6 +1755,16 @@
                     {
                         "children": [], 
                         "depends_on": null, 
+                        "help": "The stack size allocated for the UART receive task.", 
+                        "id": "UART_TASK_STACK_SIZE", 
+                        "name": "UART_TASK_STACK_SIZE", 
+                        "range": null, 
+                        "title": "UART FreeRTOS task stack size.", 
+                        "type": "int"
+                    }, 
+                    {
+                        "children": [], 
+                        "depends_on": null, 
                         "help": "If enabled, define pin numbers below.", 
                         "id": "USE_HW_FLOWCTRL", 
                         "name": "USE_HW_FLOWCTRL", 

@@ -173,26 +173,58 @@ static void uart_event_task(void *pvParameters)
 ****************************************** WASP COMMAND HANDLERS *******************************************
 ***********************************************************************************************************/
 
-esp_err_t simple_handler(wasp_handle_t* handle, wasp_frame_t* frame) {
-  printf("This is the handler: %i\n", frame->cmd);
-  return ESP_OK;
+const char* FAKE_TAG = "Fake Tag";
+
+esp_err_t echo_handler(wasp_handle_t* handle, wasp_frame_t* frame) {
+  printf("This is a printf from the command handler function for code: %x\n", frame->cmd);
+  ESP_LOGI(FAKE_TAG, "And this is a log info.");
+
+  return wasp_transmit_frame(handle, frame);
 }
 
-const wasp_command_function_t simple = {
-  .command = "Simple",
+const wasp_command_function_t echo = {
+  .command = "Echo",
   .cmd_hex_code = 0x10,
-  .handler = simple_handler
+  .handler = echo_handler
 };
 
-esp_err_t simple_handler_two(wasp_handle_t* handle, wasp_frame_t* frame) {
-  printf("This is the command handler function for code: %x\n", frame->cmd);
-  return ESP_OK;
+esp_err_t sum_handler(wasp_handle_t* handle, wasp_frame_t* frame) {
+  printf("This is a printf from the command handler function for code: %x\n", frame->cmd);
+
+  int32_t return_data = 0;
+  int32_t* rx_data;
+  if ((frame->data_num*sizeof(int32_t)) < handle->config.max_tx_buf) {
+    rx_data = calloc(frame->data_num*sizeof(int32_t), sizeof(int32_t));
+  }
+  else{
+    ESP_LOGW(FAKE_TAG, "Recieved frame was larger than max allowable data buffer.");
+    return ESP_FAIL;
+  }
+  //copy all data to int32s.
+  for (int i=0; i<frame->data_num; i++) {
+    memcpy(&rx_data[i], &frame->data[i*frame->data_size], frame->data_size);
+  }
+  //sum all received data.
+  for (int i=0; i<frame->data_num; i++) {
+    return_data=return_data+rx_data[i];
+  }
+
+  if(handle->config.debug) {
+    printf("Calc'd Sum: %i", return_data);
+    printf("first data in buffer: %i", rx_data[0]);
+  }
+
+  free(rx_data);
+  ESP_LOGI(FAKE_TAG, "Sum: %i", return_data);
+  return wasp_send(handle, frame->cmd, 4, 1, &return_data);
+
+  //return ESP_OK;
 }
 
-const wasp_command_function_t simple_two = {
-  .command = "Simple Two",
-  .cmd_hex_code = 0xFF,
-  .handler = simple_handler_two
+const wasp_command_function_t sum = {
+  .command = "Sum",
+  .cmd_hex_code = 0x11,
+  .handler = sum_handler
 };
 
 /*************************************************************************************************************
@@ -213,11 +245,11 @@ void app_main(void)
   wasp_handle_t* wasp_hd = malloc(sizeof(wasp_handle_t));
   ESP_ERROR_CHECK(wasp_init(wasp_hd, wasp_config));
 
-  ESP_ERROR_CHECK(wasp_register_command_function(wasp_hd, &simple));
-  ESP_ERROR_CHECK(wasp_register_command_function(wasp_hd, &simple_two));
+  ESP_ERROR_CHECK(wasp_register_command_function(wasp_hd, &echo));
+  ESP_ERROR_CHECK(wasp_register_command_function(wasp_hd, &sum));
   //printf("Where's the problem here?\n");
   //simple_handler(&simple_frame);
 
-  xTaskCreate(uart_event_task, "uart_event_task", 2048, wasp_hd, 12, NULL);
+  xTaskCreate(uart_event_task, "uart_event_task", CONFIG_UART_TASK_STACK_SIZE, wasp_hd, 12, NULL);
   ESP_LOGI(TAG, "UART task created.");
 }

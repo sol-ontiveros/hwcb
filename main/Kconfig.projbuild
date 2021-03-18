@@ -27,6 +27,12 @@ menu "HWCB Configuration"
         help
           SW/HW comms and control UART buffer.
 
+      config UART_TASK_STACK_SIZE
+        int "UART FreeRTOS task stack size."
+        default 4096
+        help
+          The stack size allocated for the UART receive task.
+
       config USE_HW_FLOWCTRL
         bool "Enable HW flow control pins"
         default 0
