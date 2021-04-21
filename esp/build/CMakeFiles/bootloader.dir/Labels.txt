@@ -1,13 +1,13 @@
 # Target labels
  bootloader
 # Source files and their labels
-/home/sol/Device/hwcb/esp/build/CMakeFiles/bootloader
-/home/sol/Device/hwcb/esp/build/CMakeFiles/bootloader.rule
-/home/sol/Device/hwcb/esp/build/CMakeFiles/bootloader-complete.rule
-/home/sol/Device/hwcb/esp/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
-/home/sol/Device/hwcb/esp/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
-/home/sol/Device/hwcb/esp/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
-/home/sol/Device/hwcb/esp/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule
-/home/sol/Device/hwcb/esp/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
-/home/sol/Device/hwcb/esp/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
-/home/sol/Device/hwcb/esp/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
+/home/sol/esp/hwcb/build/CMakeFiles/bootloader
+/home/sol/esp/hwcb/build/CMakeFiles/bootloader.rule
+/home/sol/esp/hwcb/build/CMakeFiles/bootloader-complete.rule
+/home/sol/esp/hwcb/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+/home/sol/esp/hwcb/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+/home/sol/esp/hwcb/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+/home/sol/esp/hwcb/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule
+/home/sol/esp/hwcb/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+/home/sol/esp/hwcb/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+/home/sol/esp/hwcb/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule

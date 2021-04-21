@@ -1,4 +1,4 @@
-# Install script for directory: /home/sol/Device/hwcb/esp
+# Install script for directory: /home/sol/esp/hwcb
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,7 +39,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/sol/Device/hwcb/esp/build/esp-idf/cmake_install.cmake")
+  include("/home/sol/esp/hwcb/build/esp-idf/cmake_install.cmake")
 
 endif()
 
@@ -51,5 +51,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/sol/Device/hwcb/esp/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/sol/esp/hwcb/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

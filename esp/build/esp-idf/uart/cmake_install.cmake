@@ -1,4 +1,4 @@
-# Install script for directory: /home/sol/Device/hwcb/esp/components/uart
+# Install script for directory: /home/sol/esp/hwcb/components/uart
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

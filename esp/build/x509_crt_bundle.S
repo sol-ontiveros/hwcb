@@ -1,4 +1,4 @@
-/* * Data converted from /home/sol/Device/hwcb/esp/build/esp-idf/mbedtls/x509_crt_bundle
+/* * Data converted from /home/sol/esp/hwcb/build/esp-idf/mbedtls/x509_crt_bundle
  */
 .data
 .section .rodata.embedded

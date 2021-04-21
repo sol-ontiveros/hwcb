@@ -54,14 +54,16 @@ esp_err_t wasp_transmit_frame(wasp_handle_t* handle, wasp_frame_t* frame);
 
 esp_err_t wasp_send(wasp_handle_t* handle, uint32_t command, uint32_t data_member_size, uint32_t num_data_members, void* data);
 
-esp_err_t wasp_init(wasp_handle_t* handle, wasp_config_t config);
+wasp_handle_t* wasp_init(wasp_config_t* wasp_config);
 
 wasp_config_t wasp_get_config();
 
-int wasp_find_command(wasp_handle_t* handle, const char* command);
+int wasp_find_command(wasp_handle_t* handle, int32_t command);
 
 esp_err_t wasp_register_command_function(wasp_handle_t* handle, const wasp_command_function_t* cmd_function);
 
 esp_err_t wasp_rx_routine(wasp_handle_t* handle);
+
+static void wasp_uart_event_task(void *pvParameters);
 
 #endif

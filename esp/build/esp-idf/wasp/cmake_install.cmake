@@ -1,4 +1,4 @@
-# Install script for directory: /home/sol/Device/hwcb/esp/components/wasp
+# Install script for directory: /home/sol/esp/hwcb/components/wasp
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

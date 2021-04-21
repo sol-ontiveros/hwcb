@@ -1,2 +1,2 @@
-idf_component_register(SRCS "SU_HWCB.c"
+idf_component_register(SRCS "hwcb.c"
 INCLUDE_DIRS "." "../components")

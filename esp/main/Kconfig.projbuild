@@ -79,6 +79,11 @@ menu "HWCB Configuration"
 
 #***************************************************************************************
   menu "WASP"
+
+    config WASP_ENABLE
+      bool "Enable the wasp protocol on the specified port."
+      default "n"
+
     config WASP_UART_PORT
       int "UART port for wasp protocol"
       range 0 2 if IDF_TARGET_ESP32
@@ -115,5 +120,88 @@ menu "HWCB Configuration"
         add more debug messages.
   endmenu
 #**************************************************************************************
+
+
+
+#**************************************************************************************
+menu "Parallel Port"
+
+  config PAR_PORT_ENABLE
+      bool "Enable UART-Parallel transceiver"
+      default "n"
+      help
+        If UART->parallel is not required, the parallel port can also be initialized by calling par_port_init() directly and using par_port_write().
+
+  config PAR_UART_PORT_NUM
+      int "UART port number"
+      range 0 2 if IDF_TARGET_ESP32
+      range 0 1 if IDF_TARGET_ESP32S2
+      default 2 if IDF_TARGET_ESP32
+      default 1 if IDF_TARGET_ESP32S2
+      help
+          UART communication port number for the example.
+          See UART documentation for available port numbers.
+
+  config PAR_UART_BAUD_RATE
+      int "UART communication speed"
+      range 1200 115200
+      default 115200
+      help
+          UART communication speed if configured as UART -> parallel transceiver.
+
+  config PAR_USE_WREN
+      bool "Strobe WREN once byte is loaded onto parallel port"
+      default "n"
+      help
+        WREN is used instead of a parallel port clock to synchronize write operations.
+
+  config PAR_WREN_IO_NUM
+      int "The GPIO number of the WREN pin."
+      range 0 34 if IDF_TARGET_ESP32
+      range 0 46 if IDF_TARGET_ESP32S2
+      default 21
+
+  config PAR_WAIT_FOR_WR_READY
+      bool "Wait for a high level on the write ready pin before writing"
+      default "n"
+      help
+        A GPIO on the FPGA can be used to indicate when it is ready to read the next byte from parallel.
+
+  config PAR_WR_READY_IO_NUM
+      int "The GPIO number of the WREN pin."
+      range 0 34 if IDF_TARGET_ESP32
+      range 0 46 if IDF_TARGET_ESP32S2
+      default 22
+
+  config PAR_UART_RXD
+      int "UART RXD pin number"
+      range 0 34 if IDF_TARGET_ESP32
+      range 0 46 if IDF_TARGET_ESP32S2
+      default 5
+      help
+          GPIO number for UART RX pin. See UART documentation for more information
+          about available pin numbers for UART.
+
+  config PAR_UART_TXD
+      int "UART TXD pin number"
+      range 0 34 if IDF_TARGET_ESP32
+      range 0 46 if IDF_TARGET_ESP32S2
+      default 4
+      help
+          GPIO number for UART TX pin. See UART documentation for more information
+          about available pin numbers for UART.
+
+  config PAR_TASK_STACK_SIZE
+      int "Parallel port UART-side task stack size"
+      range 1024 16384
+      default 2048
+      help
+          Defines stack size for UART echo example. Insufficient stack size can cause crash.
+
+  endmenu
+
+#**********************************************************************************************
+
+
 
 endmenu

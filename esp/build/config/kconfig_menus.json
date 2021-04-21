@@ -1835,6 +1835,16 @@
                     {
                         "children": [], 
                         "depends_on": null, 
+                        "help": null, 
+                        "id": "WASP_ENABLE", 
+                        "name": "WASP_ENABLE", 
+                        "range": null, 
+                        "title": "Enable the wasp protocol on the specified port.", 
+                        "type": "bool"
+                    }, 
+                    {
+                        "children": [], 
+                        "depends_on": null, 
                         "help": "The UART port that will be used by the wasp protocol", 
                         "id": "WASP_UART_PORT", 
                         "name": "WASP_UART_PORT", 
@@ -1899,6 +1909,135 @@
                 "depends_on": null, 
                 "id": "hwcb-configuration-wasp", 
                 "title": "WASP", 
+                "type": "menu"
+            }, 
+            {
+                "children": [
+                    {
+                        "children": [], 
+                        "depends_on": null, 
+                        "help": "If UART->parallel is not required, the parallel port can also be initialized by calling par_port_init() directly and using par_port_write().", 
+                        "id": "PAR_PORT_ENABLE", 
+                        "name": "PAR_PORT_ENABLE", 
+                        "range": null, 
+                        "title": "Enable UART-Parallel transceiver", 
+                        "type": "bool"
+                    }, 
+                    {
+                        "children": [], 
+                        "depends_on": null, 
+                        "help": "UART communication port number for the example.\nSee UART documentation for available port numbers.", 
+                        "id": "PAR_UART_PORT_NUM", 
+                        "name": "PAR_UART_PORT_NUM", 
+                        "range": [
+                            0, 
+                            2
+                        ], 
+                        "title": "UART port number", 
+                        "type": "int"
+                    }, 
+                    {
+                        "children": [], 
+                        "depends_on": null, 
+                        "help": "UART communication speed if configured as UART -> parallel transceiver.", 
+                        "id": "PAR_UART_BAUD_RATE", 
+                        "name": "PAR_UART_BAUD_RATE", 
+                        "range": [
+                            1200, 
+                            115200
+                        ], 
+                        "title": "UART communication speed", 
+                        "type": "int"
+                    }, 
+                    {
+                        "children": [], 
+                        "depends_on": null, 
+                        "help": "WREN is used instead of a parallel port clock to synchronize write operations.", 
+                        "id": "PAR_USE_WREN", 
+                        "name": "PAR_USE_WREN", 
+                        "range": null, 
+                        "title": "Strobe WREN once byte is loaded onto parallel port", 
+                        "type": "bool"
+                    }, 
+                    {
+                        "children": [], 
+                        "depends_on": null, 
+                        "help": null, 
+                        "id": "PAR_WREN_IO_NUM", 
+                        "name": "PAR_WREN_IO_NUM", 
+                        "range": [
+                            0, 
+                            34
+                        ], 
+                        "title": "The GPIO number of the WREN pin.", 
+                        "type": "int"
+                    }, 
+                    {
+                        "children": [], 
+                        "depends_on": null, 
+                        "help": "A GPIO on the FPGA can be used to indicate when it is ready to read the next byte from parallel.", 
+                        "id": "PAR_WAIT_FOR_WR_READY", 
+                        "name": "PAR_WAIT_FOR_WR_READY", 
+                        "range": null, 
+                        "title": "Wait for a high level on the write ready pin before writing", 
+                        "type": "bool"
+                    }, 
+                    {
+                        "children": [], 
+                        "depends_on": null, 
+                        "help": null, 
+                        "id": "PAR_WR_READY_IO_NUM", 
+                        "name": "PAR_WR_READY_IO_NUM", 
+                        "range": [
+                            0, 
+                            34
+                        ], 
+                        "title": "The GPIO number of the WREN pin.", 
+                        "type": "int"
+                    }, 
+                    {
+                        "children": [], 
+                        "depends_on": null, 
+                        "help": "GPIO number for UART RX pin. See UART documentation for more information\nabout available pin numbers for UART.", 
+                        "id": "PAR_UART_RXD", 
+                        "name": "PAR_UART_RXD", 
+                        "range": [
+                            0, 
+                            34
+                        ], 
+                        "title": "UART RXD pin number", 
+                        "type": "int"
+                    }, 
+                    {
+                        "children": [], 
+                        "depends_on": null, 
+                        "help": "GPIO number for UART TX pin. See UART documentation for more information\nabout available pin numbers for UART.", 
+                        "id": "PAR_UART_TXD", 
+                        "name": "PAR_UART_TXD", 
+                        "range": [
+                            0, 
+                            34
+                        ], 
+                        "title": "UART TXD pin number", 
+                        "type": "int"
+                    }, 
+                    {
+                        "children": [], 
+                        "depends_on": null, 
+                        "help": "Defines stack size for UART echo example. Insufficient stack size can cause crash.", 
+                        "id": "PAR_TASK_STACK_SIZE", 
+                        "name": "PAR_TASK_STACK_SIZE", 
+                        "range": [
+                            1024, 
+                            16384
+                        ], 
+                        "title": "Parallel port UART-side task stack size", 
+                        "type": "int"
+                    }
+                ], 
+                "depends_on": null, 
+                "id": "hwcb-configuration-parallel-port", 
+                "title": "Parallel Port", 
                 "type": "menu"
             }
         ], 
