@@ -1,0 +1,13 @@
+Output: NC Drill Files
+Type  : NC Drill
+From  : Project [hwcb.PrjPcb]
+   Generated File[hwcb-RoundHoles.TXT]
+   Generated File[hwcb-SlotHoles.TXT]
+   Generated File[hwcb.LDP]
+   Generated File[hwcb.DRR]
+
+
+Files Generated   : 4
+Documents Printed : 0
+
+Finished Output Generation At 9:06:49 AM On 4/21/2021

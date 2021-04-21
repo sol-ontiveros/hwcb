@@ -1,0 +1,18 @@
+----------------------------------------------------------------------------------------------------------------------------------
+NCDrill File Report For: hwcb.PcbDoc   4/21/2021  9:06:49 AM
+----------------------------------------------------------------------------------------------------------------------------------
+
+Layer Pair : Top Layer to Bottom Layer
+ASCII RoundHoles File : hwcb-RoundHoles.TXT
+ASCII SlotHoles File : hwcb-SlotHoles.TXT
+
+Tool       Hole Size               Hole Tolerance               Hole Type       Hole Count   Plated         Tool Travel
+----------------------------------------------------------------------------------------------------------------------------------
+T1      24mil (0.599mm)                                           Slot              8         PTH        0.00inch (0.00mm)
+T2      28mil (0.711mm)                                           Round             149       PTH        0.00inch (0.00mm)
+T3      40mil (1.021mm)                                           Round             16        PTH        0.00inch (0.00mm)
+T4      41mil (1.039mm)                                           Round             62        PTH        0.00inch (0.00mm)
+----------------------------------------------------------------------------------------------------------------------------------
+Totals                                                                              235
+
+Total Processing Time (hh:mm:ss) : 00:00:00

@@ -1,0 +1,29 @@
+Removed Pin From Net: NetName=NetJ5_12 Pin=U1-42
+Removed Pin From Net: NetName=NetJ5_10 Pin=U1-43
+Removed Pin From Net: NetName=NetJ5_8 Pin=U1-44
+Removed Pin From Net: NetName=NetJ5_6 Pin=U1-46
+Removed Pin From Net: NetName=NetJ5_4 Pin=U1-49
+Removed Pin From Net: NetName=NetJ5_15 Pin=U1-50
+Removed Pin From Net: NetName=NetJ5_13 Pin=U1-51
+Removed Pin From Net: NetName=NetJ5_11 Pin=U1-52
+Removed Pin From Net: NetName=NetJ5_9 Pin=U1-53
+Removed Pin From Net: NetName=NetJ5_7 Pin=U1-54
+Removed Pin From Net: NetName=NetJ5_5 Pin=U1-55
+Removed Pin From Net: NetName=NetJ5_3 Pin=U1-58
+Added Pin To Net: NetName=NetJ5_15 Pin=U1-38
+Added Pin To Net: NetName=NetJ5_13 Pin=U1-42
+Added Pin To Net: NetName=NetJ5_12 Pin=U1-43
+Added Pin To Net: NetName=NetJ5_11 Pin=U1-44
+Added Pin To Net: NetName=NetJ5_10 Pin=U1-46
+Added Pin To Net: NetName=NetJ5_9 Pin=U1-49
+Added Pin To Net: NetName=NetJ5_8 Pin=U1-50
+Added Pin To Net: NetName=NetJ5_6 Pin=U1-51
+Added Pin To Net: NetName=NetJ5_7 Pin=U1-52
+Added Pin To Net: NetName=NetJ5_5 Pin=U1-53
+Added Pin To Net: NetName=NetJ5_4 Pin=U1-54
+Added Pin To Net: NetName=NetJ5_3 Pin=U1-55
+Added Pin To Net: NetName=NetJ5_2 Pin=J5-2
+Added Pin To Net: NetName=NetJ5_2 Pin=U1-58
+Added Net: Name=NetJ5_2
+Added Room: Name=hwcb
+Added Room: Name=hwcb_2

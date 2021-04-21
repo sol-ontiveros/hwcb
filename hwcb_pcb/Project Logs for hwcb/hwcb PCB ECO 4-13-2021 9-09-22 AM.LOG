@@ -1,0 +1,21 @@
+Added Pin To Net: NetName=1V2 Pin=C6-1
+Added Pin To Net: NetName=1V2 Pin=C7-1
+Added Pin To Net: NetName=1V2 Pin=C8-1
+Added Pin To Net: NetName=1V2 Pin=C9-1
+Added Pin To Net: NetName=1V2 Pin=C10-1
+Added Pin To Net: NetName=1V2 Pin=C12-1
+Added Pin To Net: NetName=1V2 Pin=C13-1
+Added Pin To Net: NetName=1V2 Pin=C14-1
+Added Pin To Net: NetName=1V2 Pin=C15-1
+Added Pin To Net: NetName=3V3 Pin=C16-1
+Added Pin To Net: NetName=3V3 Pin=C17-1
+Added Pin To Net: NetName=3V3 Pin=C18-1
+Added Pin To Net: NetName=3V3 Pin=C19-1
+Added Pin To Net: NetName=3V3 Pin=C20-1
+Added Pin To Net: NetName=3V3 Pin=C22-1
+Added Pin To Net: NetName=3V3 Pin=C23-1
+Added Pin To Net: NetName=3V3 Pin=C24-1
+Added Pin To Net: NetName=3V3 Pin=C25-1
+Added Pin To Net: NetName=3V3 Pin=C26-1
+Added Room: Name=hwcb
+Added Room: Name=hwcb_2
